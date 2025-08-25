@@ -1,10 +1,16 @@
 package ru.hogwarts.school.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
+
+import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
@@ -12,8 +18,11 @@ import ru.hogwarts.school.service.StudentService;
 public class StudentController {
 
     private final StudentService studentService;
+    private final FacultyService facultyService;
 
-    public StudentController(StudentService studentService) {this.studentService = studentService;}
+    public StudentController(StudentService studentService, FacultyService facultyService) {
+        this.studentService = studentService;
+    this.facultyService = facultyService;}
 
     @GetMapping("{id}")
     public ResponseEntity<Student> getStudentInfo(@PathVariable Long id) {
@@ -43,4 +52,16 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/age/{age}")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@PathVariable int min, @PathVariable int max) {
+        Collection<Student> filteredStudents = studentService.findByAgeBetween(min, max);
+        return ResponseEntity.ok(filteredStudents);
+    }
+
+    @GetMapping("/faculty/{id}")
+    public ResponseEntity<List<Student>> getStudentsByFacultyId(@RequestParam Long Id) {
+        return ResponseEntity.ok(studentService.findByFacultyId(Id));
+    }
+
 }
