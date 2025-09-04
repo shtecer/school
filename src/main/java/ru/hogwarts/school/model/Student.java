@@ -18,6 +18,7 @@ public class Student {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
+    private Faculty faculty;
 
     public long getId() {return id;}
     public void setId(long id) {this.id = id;}
