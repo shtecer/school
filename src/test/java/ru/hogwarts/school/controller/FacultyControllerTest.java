@@ -77,8 +77,8 @@ public class FacultyControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("TestFaculty2", response.getBody().getName());
-        assertEquals("TestColor2", response.getBody().getColor());
+        assertEquals(createdFaculty.getName(), response.getBody().getName());
+        assertEquals(createdFaculty.getColor(), response.getBody().getColor());
     }
 
     @Test
