@@ -12,14 +12,10 @@ public class Faculty {
     private String name;
     private String color;
 
-    public Faculty(long id, String name, String color) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-        }
-
     @OneToMany(mappedBy = "faculty")
     private List<Student> students;
+    public Faculty() {
+    }
 
     public long getId() {return id;}
     public void setId(long id) {this.id = id;}

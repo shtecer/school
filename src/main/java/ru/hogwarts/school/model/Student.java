@@ -10,15 +10,11 @@ public class Student {
     private String name;
     private int age;
 
-    public Student(long id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-        }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
+    public Student() {
+    }
 
     public long getId() {return id;}
     public void setId(long id) {this.id = id;}
