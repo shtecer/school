@@ -82,4 +82,21 @@ public class StudentController {
         return ResponseEntity.ok(lastFive);
     }
 
+    @GetMapping("/names-starting-with-a")
+    public ResponseEntity<List<String>> getStudentNamesStartingWithA() {
+        List<String> studentNames = studentService.getSortedStudentNamesStartingWithA();
+
+        if (studentNames.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(studentNames);
+    }
+
+    @GetMapping("/average-age-stream")
+    public ResponseEntity<Double> getAverageAgeWithStream() {
+        Double averageAge = studentService.getAverageAgeWithStream();
+        return ResponseEntity.ok(averageAge);
+    }
+
 }

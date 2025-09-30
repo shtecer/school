@@ -18,4 +18,14 @@ public class InfoController {
     public ResponseEntity<Integer> getPort() {
         return ResponseEntity.ok(serverPort);
     }
+
+    @GetMapping("/sum")
+    public ResponseEntity<Integer> getSum() {
+        int limit = 1_000_000;
+
+        long sum = (long) limit * (1 + limit) / 2;
+
+        return ResponseEntity.ok((int) sum);
+    }
+
 }

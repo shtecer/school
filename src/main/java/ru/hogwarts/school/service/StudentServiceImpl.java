@@ -68,4 +68,35 @@ public class StudentServiceImpl implements StudentService {
         logger.info("The method of deducing the last five students was called");
         return studentRepository.getLastFiveStudents();
     }
+
+    public List<String> getSortedStudentNamesStartingWithA() {
+
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name != null && !name.trim().isEmpty())
+                .filter(name -> {
+                    String upperName = name.toUpperCase();
+                    return upperName.startsWith("A") || upperName.startsWith("А");
+                })
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .map(String::toUpperCase)
+                .toList();
+    }
+
+    public Double getAverageAgeWithStream() {
+
+        List<Student> allStudents = studentRepository.findAll();
+
+        if (allStudents.isEmpty()) {
+            return 0.0;
+        }
+
+        double averageAge = allStudents.stream()
+                .filter(student -> student.getAge() > 0)
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+
+        return averageAge;
+    }
 }
