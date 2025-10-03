@@ -18,4 +18,6 @@ public interface StudentService {
     List<Student> getLastFiveStudents();
     List<String> getSortedStudentNamesStartingWithA();
     Double getAverageAgeWithStream();
+    void printStudentsNamesInParallel();
+    void printStudentNamesSynchronized();
 }
