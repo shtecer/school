@@ -13,11 +13,13 @@ import ru.hogwarts.school.repository.StudentRepository;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 @Service
 public class StudentServiceImpl implements StudentService {
-   @Autowired
-   private StudentRepository studentRepository;
-   private FacultyRepository facultyRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+    private FacultyRepository facultyRepository;
     private final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     public StudentServiceImpl(StudentRepository studentRepository) {
@@ -98,5 +100,94 @@ public class StudentServiceImpl implements StudentService {
                 .orElse(0.0);
 
         return averageAge;
+    }
+
+    public List<String> getAllStudentNames() {
+
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name != null && !name.trim().isEmpty())
+                .toList();
+    }
+
+    public void printStudentsNamesInParallel() {
+
+        List<String> studentNames = getAllStudentNames();
+
+        if (!studentNames.isEmpty()) {
+            System.out.println(studentNames.get(0));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (studentNames.size() <= 2) {
+            System.out.println(studentNames.get(1));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (studentNames.size() >= 3) {
+            Thread thread1 = new Thread(() -> {
+                System.out.println(studentNames.get(2));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (studentNames.size() >= 4) {
+                    System.out.println(studentNames.get(3));
+                }
+            });
+            thread1.start();
+        }
+
+        if (studentNames.size() >= 5) {
+            Thread thread2 = new Thread(() -> {
+                System.out.println(studentNames.get(4));
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (studentNames.size() >= 6) {
+                    System.out.println(studentNames.get(5));
+                }
+            });
+            thread2.start();
+        }
+    }
+
+    private synchronized void printStudentName(String name) {
+        System.out.println(name);
+    }
+
+    public void printStudentNamesSynchronized() {
+        List<String> studentNames = getAllStudentNames();
+
+       if (studentNames.size() >= 1) {
+            printStudentName(studentNames.get(0));
+        }
+        if (studentNames.size() >= 2) {
+            printStudentName(studentNames.get(1));
+        }
+
+        if (studentNames.size() >= 3) {
+            new Thread(() -> {
+                if (studentNames.size() >= 3) printStudentName(studentNames.get(2));
+                if (studentNames.size() >= 4) printStudentName(studentNames.get(3));
+            }).start();
+        }
+
+        if (studentNames.size() >= 5) {
+            new Thread(() -> {
+                if (studentNames.size() >= 5) printStudentName(studentNames.get(4));
+                if (studentNames.size() >= 6) printStudentName(studentNames.get(5));
+            }).start();
+        }
     }
 }
